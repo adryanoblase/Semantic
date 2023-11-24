@@ -3,27 +3,23 @@
 import spacy
 
 # Load the simpler spaCy model 'en_core_web_sm'
-nlp = spacy.load('en_core_web_sm')
+# This model is smaller and simpler than 'en_core_web_md'
+# It has a smaller vocabulary and fewer vectors
+nlp_sm = spacy.load('en_core_web_sm')
 
 # Input words
-tokens = nlp('cat apple monkey banana ')
+tokens = nlp_sm('cat monkey banana')
 
-# Comment on similarities
-# - Cat and monkey seem to be similar because they are both animals.
-# - Banana and apple are similar because they are both fruits.
-# - Interestingly, monkey and banana have a higher similarity than monkey and apple.
-#   This suggests that the model captures the relationship that monkeys eat bananas.
+# Print similarities
+for token1 in tokens:
+    for token2 in tokens:
+        print(f"{token1.text} - {token2.text}: {token1.similarity(token2)}")
 
-# Another interesting observation:
-# - Cat does not have any significant similarity with any of the fruits, while monkey does.
-#   This implies that the model may not explicitly recognize transitive relationships in its calculation.
+# Observations:
+# - The model 'en_core_web_sm' is a smaller and simpler version than 'en_core_web_md'.
+# - The similarity scores may be different compared to 'en_core_web_md' due to the reduced size and complexity.
+# - Despite being smaller, the model still captures some semantic relationships, such as animals being similar.
 
-# Example to demonstrate the model's ability to recognize relationships:
-# Let's create a new example with a concept of "vehicle" and "speed."
-# Here, "car" and "bike" are both related to the concept of a vehicle, and "speed" is related to both "car" and "bike."
-# As a result, we might expect "car" and "bike" to have some similarity due to their common association with "speed."
-
-new_example = nlp('car bike speed')
-for token1 in new_example:
-    for token2 in new_example:
-        print(token1.text, token2.text, token1.similarity(token2))
+# Additional notes:
+# - The similarity score ranges between 0 and 1, where 1 indicates the highest similarity.
+# - The output is symmetrical, i.e., the similarity of A to B is the same as B to A.
